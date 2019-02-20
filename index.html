@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Welcome</title>
+</head>
+<body>
+<h1>Spacetime</h1>
+<p>spacetime lets you figure-out what time it is, all-over the world</p>
+<p></p>
+<script src="https://unpkg.com/spacetime"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    let s = spacetime(new Date());
+    console.info(s);
+    if (s.isValid()) {
+        let season = '';
+        switch (true) {
+            case s.format('season') == 'Spring':
+                season = '🌱';
+                break;
+            case s.format('season') == 'Summer':
+                season = '☀️';
+                break;
+            case s.format('season') == 'Autumn' || s.format('season') == 'Fall':
+                season = '🍂';
+                break;
+            case s.format('season') == 'Winter':
+                season = '⛄';
+                break;
+        }
+        let el = `
+            <div>
+                <div>Good ${s.dayTime()}!</div>
+                <div>${s.time()} (${s.timezone().name}) ${s.timezone().display}</div>
+                <div>${s.format('month')} ${s.format('date-ordinal')}, ${s.format('year')}</div>
+                <div>${s.format('season')} ${season}</div>
+                <div>🌎 ${s.timezone().hemisphere}</div>
+            </div>
+        `;
+        let el2 = `
+            Good ${s.dayTime()}!
+            ${s.time()} (${s.timezone().name}) ${s.timezone().display}
+            ${s.format('month')} ${s.format('date-ordinal')}, ${s.format('year')}
+            ${s.format('season')} ${season}
+            🌎 ${s.timezone().hemisphere}
+        `;
+        console.info(el2);
+        $(document).ready(function(){
+            $("body").append(el);
+        });
+    }
+</script>
+</body>
+</html>
