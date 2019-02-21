@@ -38,15 +38,43 @@
                 <div>🌎 ${s.timezone().hemisphere}</div>
             </div>
         `;
-        let el2 = `
+        let e2 = `
             Good ${s.dayTime()}!
-            ${s.time()} (${s.timezone().name}) ${s.timezone().display}
+            ${s.time()} (${s.timezone().name}) ${s.timezone().display} (${s.format('offset')})
             ${s.format('month')} ${s.format('date-ordinal')}, ${s.format('year')}
             ${s.format('season')} ${season}
             🌎 ${s.timezone().hemisphere}
         `;
-        console.info(el2);
-        $(document).ready(function(){
+        console.info(e2);
+        let worldTime = [];
+        for (let key in s.timezones) {
+            if (s.timezones.hasOwnProperty(key)) {
+                let est = spacetime(s.goto(key).d).fromNow().diff;
+                if (est.hours !== 0 && est.minutes !== 0) {
+                    worldTime.push({
+                        tz: s.goto(key).tz,
+                        time: s.goto(key).time(),
+                        diff: `${Math.abs(est.hours)} hour ${est.minutes} minutes ${Math.sign(est.hours) === 1 ? 'behind' : 'above'}`,
+                    });
+                }
+                else if (est.hours !== 0) {
+                    worldTime.push({
+                        tz: s.goto(key).tz,
+                        time: s.goto(key).time(),
+                        diff: `${Math.abs(est.hours)} hour ${Math.sign(est.hours) === 1 ? 'behind' : 'above'}`,
+                    });
+                }
+                else if (est.minutes !== 0) {
+                    worldTime.push({
+                        tz: s.goto(key).tz,
+                        time: s.goto(key).time(),
+                        diff: `${Math.abs(est.minutes)} minutes ${Math.sign(est.hours) === 1 ? 'behind' : 'above'}`,
+                    });
+                }
+            }
+        }
+        console.info(worldTime);
+        $(document).ready(function () {
             $("body").append(el);
         });
     }
